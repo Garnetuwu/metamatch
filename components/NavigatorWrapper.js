@@ -1,18 +1,58 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+
+import { FilterContextProvider } from "../store/filter-context";
+import { enableScreens } from "react-native-screens";
+import { ImageBackground } from "react-native";
+
+import HeroRelationDetail from "../screens/HeroRelationDetail";
 import Allheroes from "../screens/Allheroes";
 import HeroDetail from "../screens/HeroDetail";
-import { FilterContextProvider } from "../store/filter-context";
-import Colors from "../utils/Colors";
-import { enableScreens } from "react-native-screens";
-import HeroRelationDetail from "../screens/HeroRelationDetail";
-import Fonts from "../utils/Fonts";
-import { ImageBackground } from "react-native";
 import MetamatchHeader from "./MetamatchHeader";
 
+import Colors from "../utils/Colors";
+import Fonts from "../utils/Fonts";
+import AboutUs from "../screens/AboutUs";
+
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
 
 enableScreens(false);
+
+const customScreenOptions = {
+  headerStyle: {
+    backgroundColor: Colors.thirdBlack,
+  },
+  headerTintColor: Colors.primaryWhite,
+  headerTitleStyle: {
+    fontFamily: Fonts.primaryFont,
+    fontSize: 24,
+  },
+};
+
+const DrawerNavigator = () => {
+  return (
+    <Drawer.Navigator
+      screenOptions={{
+        ...customScreenOptions,
+        sceneContainerStyle: {
+          backgroundColor: "transparent",
+        },
+      }}
+    >
+      <Drawer.Screen
+        component={Allheroes}
+        name="All Heroes"
+        options={{
+          headerTitle: () => <MetamatchHeader />,
+          headerTitleAlign: "center",
+        }}
+      />
+      <Drawer.Screen component={AboutUs} name="About us" />
+    </Drawer.Navigator>
+  );
+};
 
 export default NavigatorWrapper = () => {
   return (
@@ -23,16 +63,8 @@ export default NavigatorWrapper = () => {
       >
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="All Heroes"
             screenOptions={{
-              headerStyle: {
-                backgroundColor: Colors.thirdBlack,
-              },
-              headerTintColor: Colors.primaryWhite,
-              headerTitleStyle: {
-                fontFamily: Fonts.primaryFont,
-                fontSize: 24,
-              },
+              ...customScreenOptions,
               contentStyle: {
                 backgroundColor: "transparent",
               },
@@ -40,11 +72,10 @@ export default NavigatorWrapper = () => {
             }}
           >
             <Stack.Screen
-              name="All Heroes"
-              component={Allheroes}
+              name="Drawer"
+              component={DrawerNavigator}
               options={{
-                headerTitle: () => <MetamatchHeader />,
-                headerTitleAlign: "center",
+                headerShown: false,
               }}
             />
             <Stack.Screen
